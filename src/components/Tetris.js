@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {createStage} from '../gameHelpers';
+import {createStage, checkCollision} from '../gameHelpers';
 
 //Styled components
 import { StyledTetrisWrapper, StyledTetris } from './styles/StyledTetris';
@@ -27,17 +27,30 @@ const Tetris = () => {
     }
 
     const movePlayer = dir => {
-        updatedPlayerPos({x: dir, y: 0});
+        if(!checkCollision(player, stage, {x: dir, y: 0})){
+            updatedPlayerPos({x: dir, y: 0});
+        }
     }
 
     const startGame = () => {
         //reset everything
         setStage(createStage());
         resetPlayer();
+        setGameOver(false);
     }
 
     const drop = () => {
-        updatedPlayerPos({x: 0, y: 1, collided: false});
+        if(!checkCollision(player, stage, {x: 0, y: 1})){
+            updatedPlayerPos({x: 0, y: 1, collided: false});
+        }
+        else{
+            //check if game is over
+            if(player.pos.y < 1){
+                setGameOver(true);
+                setDropTime(null);
+            }
+            updatedPlayerPos({x: 0, y: 0, collided: true});
+        }
     }
 
     const dropPlayer = () => {
