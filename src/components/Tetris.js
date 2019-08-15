@@ -20,11 +20,13 @@ const Tetris = () => {
 
   const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
-  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
-    rowsCleared
-  );
-
-  console.log('re-render');
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
+  const MOVES = {
+      RIGHT: 39,
+      LEFT: 37,
+      DOWN: 40,
+      TOP: 38
+  }
 
   const movePlayer = dir => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
@@ -65,7 +67,6 @@ const Tetris = () => {
     } else {
       // Game over!
       if (player.pos.y < 1) {
-        console.log('GAME OVER!!!');
         setGameOver(true);
         setDropTime(null);
       }
@@ -88,13 +89,13 @@ const Tetris = () => {
 
   const move = ({ keyCode }) => {
     if (!gameOver) {
-      if (keyCode === 37) {
+      if (keyCode === MOVES.LEFT) {
         movePlayer(-1);
-      } else if (keyCode === 39) {
+      } else if (keyCode === MOVES.RIGHT) {
         movePlayer(1);
-      } else if (keyCode === 40) {
+      } else if (keyCode === MOVES.DOWN) {
         dropPlayer();
-      } else if (keyCode === 38) {
+      } else if (keyCode === MOVES.TOP) {
         playerRotate(stage, 1);
       }
     }
